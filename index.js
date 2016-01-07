@@ -218,6 +218,6 @@ function autogenerateLoc() {
 
 }
 
-server.listen(8080, function () {
-    console.log('\033[96m   server listening on *:8080\033[39m');
+server.listen(3333, function () {
+    console.log('\033[96m   server listening on *:3333\033[39m');
 });
