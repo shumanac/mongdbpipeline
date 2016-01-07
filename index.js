@@ -1,9 +1,9 @@
 var net = require('net');
-//var mqtt=require('mqtt');  
+
 var mongodb = require('mongodb');
 var mongodbClient = mongodb.MongoClient;
 var mongoose = require('mongoose');
-var mongodbURI = 'mongodb://heroku_jmlw649q:rf59u0v806q6t1l5ltsl2l4tl2@ds041831.mongolab.com:41831/heroku_jmlw649q';
+var mongodbURI = 'mongodb://localhost/todos';
 
 mongoose.connect(mongodbURI);
 
@@ -110,7 +110,7 @@ var server = net.createServer(function (conn) {
     conn.setEncoding('utf8');
     var nickname;
     conn.write(
-        ' Welcome to AGD IT SLNS Vehicle Tracking System'
+        ' '
     );
 
     count++;
@@ -160,12 +160,6 @@ var server = net.createServer(function (conn) {
         }
 
 
-
-
-
-
-
-
     });
 
     conn.on('error', function (e) {
@@ -204,59 +198,7 @@ var server = net.createServer(function (conn) {
 });
 
 
-var newserver = net.createServer(function (conn) {
-    conn.setEncoding('HEX');
 
-    conn.on('data', function (data) {
-        //console.log(data.length);
-        var newdata = data.replace(/ /g, '');
-        //console.log(newdata);
-        if (data.length === 62) {
-            var devicetag = data.toString().slice(0, 2);
-            //console.log(splits);
-            if (devicetag === '7e') {
-
-                var messageid = data.slice(2, 6);
-                //console.log(terminalAthentication);
-                if (messageid === '0102') {
-                    var deviceid = newdata.slice(10, 22);
-                    var serialID = newdata.slice(23, 27);
-                    var Authenticationkey = newdata.slice(28, 58);
-                    var calibration = newdata.slice(58, 60);
-                    var endtag = newdata.slice(60, 62);
-
-                    var messagelength = '0005';
-                    var result = '00';
-                    var responsemessageid = '0102';
-
-                    //console.log(endtag);
-
-                    conn.write(devicetag + messageid + messagelength + deviceid + serialID + serialID);
-
-                }
-            }
-
-        }
-
-    });
-
-    conn.on('error', function (e) {
-
-    });
-
-    conn.on('close', function () {
-
-
-    });
-
-
-    console.log('6264  new connection');
-});
-
-
-newserver.listen(6264, function () {
-    console.log('\033[96m   server listening on *:6264\033[39m');
-});
 server.listen(8080, function () {
     console.log('\033[96m   server listening on *:8080\033[39m');
 });
