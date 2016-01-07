@@ -5,6 +5,9 @@ var mongodbClient = mongodb.MongoClient;
 var mongoose = require('mongoose');
 var mongodbURI = 'mongodb://localhost/todos';
 
+var longitudeextra;
+var latitudeextra;
+
 mongoose.connect(mongodbURI);
 
 
@@ -38,11 +41,14 @@ var locations = mongoose.model('locations', LocationSchema);
 
 function savedatabymongooes(data) {
 
+    longitudeextra = longitudeextra + 0.001;
+    latitudeextra = latitudeextra + 0.001;
 
     var arr = data.split(',');
     var imei = arr[1];
     var commandtype = arr[2];
     var latitude = arr[4];
+    latitude = latitude + latitudeextra;
     var longitude = arr[5];
     var datetime = new Date();
     //console.log(datetime);
@@ -197,7 +203,19 @@ var server = net.createServer(function (conn) {
     console.log('\033[90m new connection!\033[39m');
 });
 
+setInterval(function () {
+    autogenerateLoc();
+}, 10000);
 
+function autogenerateLoc() {
+    var locdataa = '$$L154,866699023667183,AAA,35,23.523768,90.222436,160107041217,A,11,12,0,23,0.8,6,10418109,12854934,470|1|61E0|43C4,0000,0000|0000|0000|02D3|010A,00000001,*C6';
+
+
+
+
+    savedatabymongooes(locdataa)
+
+}
 
 server.listen(8080, function () {
     console.log('\033[96m   server listening on *:8080\033[39m');
