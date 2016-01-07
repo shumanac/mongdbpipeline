@@ -5,8 +5,9 @@ var mongodbClient = mongodb.MongoClient;
 var mongoose = require('mongoose');
 var mongodbURI = 'mongodb://localhost/todos';
 
-var longitudeextra;
-var latitudeextra;
+var longitudeextra = 0.0;
+var latitudeextra = 0.0;
+var randomangle = 0;
 
 mongoose.connect(mongodbURI);
 
@@ -41,15 +42,25 @@ var locations = mongoose.model('locations', LocationSchema);
 
 function savedatabymongooes(data) {
 
-    longitudeextra = longitudeextra + 0.1;
-    latitudeextra = latitudeextra + 0.1;
+    longitudeextra = longitudeextra + 0.001;
+    latitudeextra = latitudeextra + 0.001;
+    randomangle = randomangle + 20;
 
     var arr = data.split(',');
     var imei = arr[1];
     var commandtype = arr[2];
     var latitude = arr[4];
-    latitude = latitude + latitudeextra;
+    var bewlatitude = parseInt(latitude);
+    bewlatitude = bewlatitude + longitudeextra;
+    var nlat = bewlatitude.toString();
+
+
+
+
     var longitude = arr[5];
+    var numlongi = parseInt(longitude);
+    numlongi = numlongi + latitudeextra;
+    var nlong = numlongi.toString();
 
     var datetime = new Date();
     //console.log(datetime);
@@ -58,6 +69,12 @@ function savedatabymongooes(data) {
     var gsm_signal_status = arr[9];
     var speed = arr[10];
     var direction = arr[11];
+    var numdirection = parseInt(direction);
+    numdirection = numdirection + randomangle;
+    var ndirection = numdirection.toString();
+
+
+
     var horizaontal_accuracy = arr[12];
     var altitude = arr[13];
     var mileage = arr[14];
@@ -74,14 +91,14 @@ function savedatabymongooes(data) {
         sourcedevice: 'tcpping',
         imei: imei,
         commandtype: commandtype,
-        latitude: latitude,
-        longitude: longitude,
+        latitude: nlat,
+        longitude: nlong,
         datetime: new Date(datetime),
         status: status,
         number_of_satelites: number_of_satelites,
         gsm_signal_status: gsm_signal_status,
         speed: speed,
-        direction: direction,
+        direction: ndirection,
         horizaontal_accuracy: horizaontal_accuracy,
         altitude: altitude,
         mileage: mileage,
