@@ -41,8 +41,8 @@ var locations = mongoose.model('locations', LocationSchema);
 
 function savedatabymongooes(data) {
 
-    longitudeextra = longitudeextra + 0.001;
-    latitudeextra = latitudeextra + 0.001;
+    longitudeextra = longitudeextra + 0.1;
+    latitudeextra = latitudeextra + 0.1;
 
     var arr = data.split(',');
     var imei = arr[1];
@@ -50,6 +50,7 @@ function savedatabymongooes(data) {
     var latitude = arr[4];
     latitude = latitude + latitudeextra;
     var longitude = arr[5];
+
     var datetime = new Date();
     //console.log(datetime);
     var status = arr[7];
