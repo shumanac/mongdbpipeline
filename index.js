@@ -56,7 +56,7 @@ function savedatabymongooes(data) {
     var commandtype = arr[2];
     var latitude = arr[4];
     var bewlatitude = parseInt(latitude);
-    bewlatitude = bewlatitude + longitudeextra;
+    bewlatitude = longitudeextra;
     var nlat = bewlatitude.toString();
 
 
@@ -64,7 +64,7 @@ function savedatabymongooes(data) {
 
     var longitude = arr[5];
     var numlongi = parseInt(longitude);
-    numlongi = numlongi + latitudeextra;
+    numlongi = latitudeextra;
     var nlong = numlongi.toString();
 
     var datetime = new Date();
