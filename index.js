@@ -45,6 +45,7 @@ function savedatabymongooes(data) {
 
     var tepmo = randomFloat(1);
     var tepma = randomFloat(1);
+    var speeeedd = randomFloat(100);
 
     longitudeextra = longitudeextra + tepmo;
     latitudeextra = latitudeextra + tepma;
@@ -71,7 +72,7 @@ function savedatabymongooes(data) {
     var status = arr[7];
     var number_of_satelites = arr[8];
     var gsm_signal_status = arr[9];
-    var speed = "0";
+    var speed = speeeedd.toString();
     var direction = arr[11];
     var numdirection = parseInt(direction);
     numdirection = numdirection + randomangle;
