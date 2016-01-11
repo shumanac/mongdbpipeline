@@ -1,4 +1,5 @@
 var net = require('net');
+var randomFloat = require('random-float');
 
 var mongodb = require('mongodb');
 var mongodbClient = mongodb.MongoClient;
@@ -42,8 +43,11 @@ var locations = mongoose.model('locations', LocationSchema);
 
 function savedatabymongooes(data) {
 
-    longitudeextra = longitudeextra + 0.001;
-    latitudeextra = latitudeextra + 0.001;
+    var tepmo = randomFloat(1);
+    var tepma = randomFloat(1);
+
+    longitudeextra = longitudeextra + tepmo;
+    latitudeextra = latitudeextra + tepma;
     randomangle = randomangle + 20;
 
     var arr = data.split(',');
@@ -67,7 +71,7 @@ function savedatabymongooes(data) {
     var status = arr[7];
     var number_of_satelites = arr[8];
     var gsm_signal_status = arr[9];
-    var speed = arr[10];
+    var speed = "0";
     var direction = arr[11];
     var numdirection = parseInt(direction);
     numdirection = numdirection + randomangle;
