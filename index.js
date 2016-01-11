@@ -43,8 +43,8 @@ var locations = mongoose.model('locations', LocationSchema);
 
 function savedatabymongooes(data) {
 
-    var tepmo = randomFloat(1);
-    var tepma = randomFloat(1);
+    var tepmo = randomFloat(-1, 1);
+    var tepma = randomFloat(-1, 1);
     var speeeedd = randomFloat(100);
 
     longitudeextra = longitudeextra + tepmo;
