@@ -5,8 +5,8 @@ var async = require('async');
 var mongodb = require('mongodb');
 var mongodbClient = mongodb.MongoClient;
 var mongoose = require('mongoose');
-var mongodbURI = 'mongodb://localhost/temploc';
-var aggregateOut = require('mongo-aggregate-out');
+var mongodbURI = 'mongodb://localhost/todos';
+//var aggregateOut = require('mongo-aggregate-out');
 
 var longitudeextra = 0.0;
 var latitudeextra = 0.0;
@@ -76,7 +76,154 @@ var ArchiveSchema = new Schema({
 var locations = mongoose.model('locations', LocationSchema);
 var archiveloc = mongoose.model('archiveloc', ArchiveSchema);
 
+function savedatabymongooes(data) {
 
+
+    var arr = data.split(',');
+    var imei = arr[1];
+    var commandtype = arr[2];
+    var latitude = arr[4];
+    var longitude = arr[5];
+    var datetime = new Date();
+    //console.log(datetime);
+    var status = arr[7];
+    var number_of_satelites = arr[8];
+    var gsm_signal_status = arr[9];
+    var speed = arr[10];
+    var direction = arr[11];
+    var horizaontal_accuracy = arr[12];
+    var altitude = arr[13];
+    var mileage = arr[14];
+    var run_time = arr[15];
+    var base_station_info = arr[16];
+    var io_port_status = arr[17];
+    var analog_input = arr[18];
+    var unixTimestamp = Date.now();
+    //console.log('unixTimestamp' + unixTimestamp);
+
+
+
+    var loc = new locations({
+        sourcedevice: 'tcpping',
+        imei: imei,
+        commandtype: commandtype,
+        latitude: latitude,
+        longitude: longitude,
+        datetime: new Date(datetime),
+        status: status,
+        number_of_satelites: number_of_satelites,
+        gsm_signal_status: gsm_signal_status,
+        speed: speed,
+        direction: direction,
+        horizaontal_accuracy: horizaontal_accuracy,
+        altitude: altitude,
+        mileage: mileage,
+        run_time: run_time,
+        base_station_info: base_station_info,
+        io_port_status: io_port_status,
+        analog_input: analog_input,
+        increment_index: unixTimestamp
+    });
+
+    async.series([
+
+        function (callback) {
+                loc.save(function (err, imei) {
+                    if (err) {
+                        return err;
+                        console.log(err);
+                    } else {
+                        loc.imei = imei;
+
+                        console.log("Location data save in Location collection");
+                    }
+                    callback();
+                });
+        },
+
+        function (callback) {
+                var pipeline = [
+
+                    {
+                        $group: {
+
+                            _id: '$imei',
+                            total_imei: {
+                                $sum: 1,
+                            },
+
+                            "firstDoc": {
+                                "$first": "$$ROOT",
+
+                            },
+
+                        }
+                            },
+
+                    {
+                        $match: {
+
+                            total_imei: {
+                                $gt: 5
+                            }
+                        }
+                            }
+
+                ];
+
+                locations.aggregate(pipeline)
+                    .exec(function (err, pipeline) {
+                        pipeline.forEach(function (d) {
+                            var temploc = new archiveloc({
+
+                                //  total_imei: d.total_imei,
+                                firstDoc: d.firstDoc
+
+
+                            });
+
+                            temploc.save(function (err) {
+
+                                if (err) {
+
+                                    console.log(err);
+
+                                } else {
+
+                                    console.log("Loc data greater than 10 so Archiveloc has created and started to save into Archiveloc");
+                                }
+
+                            });
+
+                            locations.findByIdAndRemove(d.firstDoc._id, function (err, doc) {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    console.log("Started remove old data from Location");
+                                }
+
+
+                            })
+
+                        })
+
+                        console.log("Location data matching all the pipeline conditions");
+                    })
+
+                callback();
+            }
+
+        ]),
+        function (err) {
+            if (err) return next(err);
+
+        };
+
+
+};
+
+
+/*
 function savedatabymongooes(data) {
 
     var tepmo = randomFloat(-1, 1);
@@ -242,7 +389,7 @@ function savedatabymongooes(data) {
 
                         })
 
-                    })
+                    })*/
 
                 /*    
                     .map(function (val) {
@@ -284,10 +431,10 @@ function savedatabymongooes(data) {
 
 
                 // callback(imei);
-            }
+         /*   }
 
 
-        });
+        });*/
 
 
 
@@ -395,7 +542,7 @@ function savedatabymongooes(data) {
 
 
 
-    }]);
+   // }]);
 
 
 
@@ -403,7 +550,7 @@ function savedatabymongooes(data) {
 
 
 
-};
+//};
 
 
 var count = 0,
